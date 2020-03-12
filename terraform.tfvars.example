@@ -1,0 +1,5 @@
+cloud_name=jitsi
+name=jitsi
+email=my@email.com
+allowed_prefixes="[1.2.3.4/32]"
+region_name=GRA5
