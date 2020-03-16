@@ -86,7 +86,7 @@ locals {
   ][0]
 
   ip_parts = split(".", local.jitsi)
-  fqdn     = format("ip%s.ip-%s-%s-%s.eu", local.ip_parts[3], local.ip_parts[0], local.ip_parts[1], local.ip_parts[2])
+  fqdn     = var.fqdn != "" ? var.fqdn : format("ip%s.ip-%s-%s-%s.eu", local.ip_parts[3], local.ip_parts[0], local.ip_parts[1], local.ip_parts[2])
 
   user_data = {
     hostname = local.fqdn

@@ -48,3 +48,8 @@ variable ssh_user {
   description = "Name of the user used in image_name"
   default     = "ubuntu"
 }
+
+variable fqdn {
+  description = "Fully qualified domain name of the server. By default, will use the reverse name of the public ip"
+  default     = ""
+}

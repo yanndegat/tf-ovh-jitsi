@@ -1,3 +1,4 @@
+live/*
 clouds.yaml
 .terraform
 terraform.tfstate
