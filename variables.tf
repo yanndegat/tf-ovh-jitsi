@@ -53,3 +53,18 @@ variable fqdn {
   description = "Fully qualified domain name of the server. By default, will use the reverse name of the public ip"
   default     = ""
 }
+
+variable cronjob_enabled {
+  description = "Enable cronjob to shelve/unshelve the jitsi server so it is not billed"
+  default     = false
+}
+
+variable cronjob_unshelve {
+  description = "Unshelve instance"
+  default     = "00 16 * * *"
+}
+
+variable cronjob_shelve {
+  description = "Shelve instance. (Put instance to sleep so it is not billed)"
+  default     = "30 22 * * *"
+}

@@ -6,7 +6,7 @@ export DEBIAN_FRONTEND=noninteractive
 
 sudo apt update -y
 
-sudo apt install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common debconf-utils
+sudo apt install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common debconf-utils qemu-guest-agent
 
 wget -qO - https://download.jitsi.org/jitsi-key.gpg.key | sudo apt-key add -
 sudo sh -c "echo 'deb https://download.jitsi.org stable/' > /etc/apt/sources.list.d/jitsi-stable.list"

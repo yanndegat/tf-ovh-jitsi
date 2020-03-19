@@ -146,3 +146,58 @@ resource null_resource provision {
     script = "${path.module}/provision.sh"
   }
 }
+
+data template_file workbook {
+  template = file("${path.module}/mistral-wb.yml.tpl")
+
+  vars = {
+    name = var.name
+    id = openstack_compute_instance_v2.vm.id
+    region = var.region_name
+  }
+}
+
+resource local_file workbook {
+  count    = var.cronjob_enabled ? 1 : 0
+  content  = data.template_file.workbook.rendered
+  filename = "${path.module}/${var.name}.wb.yml"
+}
+
+# the mistral jobs are set using the openstack CLI as
+# mistral resources arent available in the terraform openstack provider
+resource null_resource openstack_mistral_setup {
+  count = var.cronjob_enabled ? 1 : 0
+
+  triggers = {
+    server_id = openstack_compute_instance_v2.vm.id
+  }
+
+  provisioner "local-exec" {
+    working_dir = path.module
+    environment = {
+      OS_CLOUD = var.cloud_name
+    }
+
+    command = <<EOF
+set -e
+sudo pip3 install -r ${path.module}/requirements.txt
+
+if openstack workbook show ${var.name} > /dev/null 2>&1; then
+   openstack workbook update ${local_file.workbook.0.filename}
+else
+   openstack workbook create ${local_file.workbook.0.filename}
+fi
+
+if openstack cron trigger show ${var.name}.unshelve > /dev/null 2>&1; then
+   openstack cron trigger delete ${var.name}.unshelve
+fi
+
+if openstack cron trigger show ${var.name}.shelve > /dev/null 2>&1; then
+   openstack cron trigger delete ${var.name}.shelve
+fi
+
+openstack cron trigger create --pattern='${var.cronjob_unshelve}' --utc ${var.name}.unshelve ${var.name}.unshelve "{}"
+openstack cron trigger create --pattern='${var.cronjob_shelve}' --utc ${var.name}.shelve ${var.name}.shelve "{}"
+EOF
+  }
+}
