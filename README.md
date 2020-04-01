@@ -40,7 +40,7 @@ EOF
 2. Create a tfvar file and edit accordingly
 
 ```
-cp myvars.tfvars.example myvars.tfvars
+cp terraform.tfvars.example terraform.tfvars
 
 ```
 
